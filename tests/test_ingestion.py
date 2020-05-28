@@ -28,7 +28,7 @@ class TestIngestion:
         assert(True)
 
 
-    def test_set_schema(self)
+    def test_set_schema(self):
         """ Confirm that schema loads. """
 
         assert(True)
