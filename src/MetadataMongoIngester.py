@@ -9,7 +9,7 @@ import configparser
 import json
 import jsonschema
 import pymongo
-
+import re
 
 class MetadataMongoIngester:
 
@@ -24,18 +24,16 @@ class MetadataMongoIngester:
     """" Initialize data members. """
 
         self.collection = None
-        self.ingester_config = None
         self.curr_schema = None
         self.good_path_key = None # Used to correct wrong archivedPath keys
-        self.index_keys = None
+        self.ingester_config = None
         self.path_pattern = None # Used to locate wrong archivedPath keys
 
         self.ingester_config = configparser.ConfigParser()
-        self.ingester_config.read()
+        self.ingester_config.read("ingester_config.cfg")
         self.good_path_key = self.ingester_config[fix_archived_path]["good_key"]
         self.path_pattern = self.ingester_config[fix_archived_path][path_pattern]
         
-
 
     """
     PUBLIC METHODS
@@ -75,6 +73,7 @@ class MetadataMongoIngester:
 
         #TBD: still needs actual ingestion        
 
+
     def open_connection(self, config_filename):
 
         """
@@ -82,19 +81,58 @@ class MetadataMongoIngester:
 
         Parameters:
             config_filename (str): Absolute path to a config file. Contents of file
-            must include:
-            1) A key "secrets_file", where the value is an absolute path to secrets file
-            2) A key "index_keys", where the value is a key or comma-separated list of
-               keys to be used as an index.
+            must include a section named "mongodb", in brackets. I.e., [mongodb]. It must have:
+                1) A key "secrets_file", where the value is an absolute path to secrets file
+                2) A key "index_keys", where the value is a key or comma-separated list of
+                   keys to be used as an index.
 
         Returns:
             None if successful, or error message string beginning with "Error:".
         """
 
+        # Open config file
+        try:
+            user_config = configparser.ConfigParser()
+            user_config.read(config_filename)
+        except Exception as e:
+            return f"Error: cannot read config file {config_filename}, received exception {str(e)}."
+
+        # Confirm it has a "mongodb" section
+        try:
+            mongo_section = user_config["mongodb"]
+        except Exception as e:
+            return f"Error: config file {config_filename} does not have a \"mongodb\" section."
+
+        # Confirm the mongofb section has a secrets_file.
+        if "secrets_file" not in mongo_section:
+            return f"Error: mongodb section of config file does not have a \"secrets_file\" key."  
+   
+        # Get the password from the secrets file or return an error.
+        password = self.__read_secrets_file(mongo_section["secrets_file"])
+        if password.starswith("Error"):
+            return password        
         
+        # Get the index_keys or return an error if not found.
+        if "index_keys" not in mongo_section:
+            return f"Error: mongodb section of config file does not have an \"index_keys\" key."
+        index_keys = mongo_section["index_keys"].split(',')
+
+        # Try to open the connection
+        try:
+            self.collection = pymongo.MongoClient(mongo_section["address"],
+                int(mongo_section["port"]),
+                username = mongo_section["username"], password = password,
+                authSource = mongo_section["authSource"])
+        except Exception as e:
+            return f"Error: could not open mongodb connection, received exception {str(e)}."
+
+        # Create an index if its not already present.
+        try:
+            self.collection.create_index([(index_keys, pymongo.ASCENDING)], unique=True)
+        except Exception as e:
+            return f"Error: could not create index, received exception {str(e)}."
 
         return None
-
 
 
     def set_schema(self, schema_filename=None):
@@ -200,7 +238,34 @@ class MetadataMongoIngester:
         return doc
      
         
+    def __read_secrets_file(self, secrets_filename):
 
+        """
+        Read the secrets file.
+
+        File must begin with a "mongodb" section. Must contain a key named "password".
+
+        Returns: The password, or an error string beginning with "Error:"
+        """
+
+        try:
+            secrets_config = configparser.ConfigParser()
+            secrets_config.read(secrets_filename)
+        except Exception as e:
+            return f"Error: cannot read secrets file {secrets_filename}, received exception {str(e)}."
+
+        try:
+            mongo_section = secrets_config["mongodb"]
+        except Exception as e:
+            return f"Error: secrets file {secrets_filename} does not have a \"mongodb\" section."
+
+        if "password" not in mongo_section:
+            return f"Error: secrets file does not contain a \"password\" key."
+
+        password = mongo_section["password"]
+        return password
+          
+        
         
 
     
