@@ -33,6 +33,7 @@ class MetadataMongoIngester:
         """
 
         self.collection = None
+        self.connection = None
         self.curr_schema = None
         self.good_path_key = None # Used to correct wrong archivedPath keys
         self.ingester_config = None
@@ -49,6 +50,32 @@ class MetadataMongoIngester:
     PUBLIC METHODS
     """
 
+    
+    def get_collection(self):
+
+        """ 
+        Get the current collection from the database.
+
+        Parameters: None
+
+        Returns: The mongodb collection named when the connection was opened.
+        """
+
+        return self.collection
+        
+
+    def get_connection(self):
+
+        """
+        Get the current connection from the database.
+
+        Parameters: None
+
+        Returns: The mongodb connection that was opened.
+        """
+
+        return self.db_connection
+        
 
     def ingest_document(self, doc):
 
@@ -64,8 +91,7 @@ class MetadataMongoIngester:
             None if successful, or error message string beginning with "Error:".
         """
 
-        # Try to open and load json file
-        filename = None
+        # If given a file, try to open and load it as json.
         if type(doc) is str:
             try:
                 filename=doc
@@ -85,15 +111,9 @@ class MetadataMongoIngester:
         if val:
             return val
 
-        # Use the filename or archivedPath to identify the document for the error message
-        if filename:
-            id = filename
-        else:
-            id = doc[self.good_path_key]
-
         # Attempt ingestion
         try:
-            result = self.collection.insert_one(metadata_dict)
+            result = self.collection.insert_one(doc)
             if result.acknowledged:
                 return None
 
@@ -101,14 +121,9 @@ class MetadataMongoIngester:
             return "Duplicate key, skipped"
 
         except Exception as e:
-            # Use the filename or archivedPath to identify the document for the error message
-            if filename:
-                id = filename
-            else:
-                id = doc[self.good_path_key]
-            return f"Error: Cannot ingest metadata {id}, received exception {str(e)}."
+            return f"Error: Cannot ingest document, received exception {str(e)}."
 
-        return f"Error: Cannot ingest metadata {id}, reason unknown."
+        return f"Error: Cannot ingest document, reason unknown."
 
 
     def is_schema_set(self): 
@@ -165,7 +180,7 @@ class MetadataMongoIngester:
 
         # Try to open the connection
         try:
-            db_connection = pymongo.MongoClient(mongo_section["address"],
+            self.db_connection = pymongo.MongoClient(mongo_section["address"],
                 int(mongo_section["port"]),
                 username = mongo_section["username"], password = password,
                 authSource = mongo_section["authSource"])
@@ -173,7 +188,7 @@ class MetadataMongoIngester:
             return f"Error: could not open mongodb connection, received exception {str(e)}."
 
         # Get the collection from the connection.
-        self.collection = db_connection[mongo_section["database"]][mongo_section["collection"]]
+        self.collection = self.db_connection[mongo_section["database"]][mongo_section["collection"]]
 
         # Create an index if its not already present.
         try:
@@ -269,7 +284,8 @@ class MetadataMongoIngester:
         We want metadata to have a field named 'archived_path', but in some older data it is 
         instead written as 'archiveFolderPath' or 'archivedFolderPath' (note the letter 'd').
         In faculty (derived) data, it might also have a hyphen, incorrect case, or other error. 
-        This method will insert the correct key and delete the old one.
+        This method will insert the correct key and delete the old one. If the document has
+        no field for the archived path, no change is made.
 
         Parameters:
             doc (dict): Metadata document as dict.
@@ -284,13 +300,10 @@ class MetadataMongoIngester:
             return doc
 
         for curr_key in doc:
-            if (re.match(self.path_pattern, curr_key, re.IGNORECASE) and
+            if (re.match(self.path_pattern, curr_key) and
                 curr_key != self.good_path_key):
                 doc[self.good_path_key] = doc[curr_key]
                 del doc[curr_key]
-
-        if self.good_path_key not in doc:
-            return f"Error: could not find {self.good_path_key} key in document."
 
         return doc
      

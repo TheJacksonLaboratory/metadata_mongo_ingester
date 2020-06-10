@@ -1,86 +1,60 @@
 #!/usr/bin/env python
 
 '''
-Basic tests for validating and ingesting metadata into mongo
+Unit tests for ingesting documents
 '''
 
-import argparse
 import configparser
 import json
 import os
-import pymongo
+from pathlib import Path
+
+from src.MetadataMongoIngester import MetadataMongoIngester
+
+
+# NOTE: pytest skips classes with constructors, so the test class can't have an 
+# __init__ method. But we can initialize things before the class, as shown here.
+
+# Get the directory this script has been called from. Use it to find the root directory 
+# for the tests, and confirm the schemas dir and test docs dir is beneath it.
+tests_dir = os.path.dirname(os.path.realpath(__file__))
+configs_dir = Path(tests_dir, "configs")
+schemas_dir = Path(tests_dir, "schemas")
+test_docs_dir = Path(tests_dir, "test_docs")
+assert Path.is_dir(schemas_dir)
+assert Path.is_dir(test_docs_dir)
 
 
 class TestIngestion:
-    """ Test connection, schema, validation, and ingestion. """
+
+    """ Test that schemas can be ingested. """
+
+    def test_good_doc_file_ingests_with_schema(self):
+
+        """ Given a good schema and a good document as a dict, confirm successful ingestion. """
+       
+        config_filename = os.path.join(configs_dir, "good_config_good_secrets.cfg")
+        schema_filename = os.path.join(schemas_dir, "good_gt-schema.json")
+        mmi = MetadataMongoIngester()
+        mmi.open_connection(config_filename)
+        mmi.set_schema(schema_filename)
+        doc_filename = os.path.join(test_docs_dir, "good_gt_metadata.json")
+        with open(doc_filename, 'r') as f:
+            doc = json.load(f)
+        val = mmi.ingest_document(doc)
+        assert val == None
 
 
-    def test_connection_from_filename(self):
-        """ Read a config file, connect to MongoDB """
+    def test_bad_doc_file_ingests_without_schema(self):
 
-        # TBD: Is secrets file named in config?
-        assert(True)
+        """ Given a bad document (missing a PI) but no schema, confirm successful ingestion. """
 
-
-    def test_connection_from_dict(self):
-        """ Given a config dict, connect to MongoDB """
-
-        assert(True)
-
-
-    def test_set_schema(self):
-        """ Confirm that schema loads. """
-
-        assert(True)
-
-
-    def test_set_schema_strictness_loose(self):
-        """ Confirm that schema strictness is set to loose. """
-     
-        assert(True)
-
-
-    def test_set_schema_strictness_strict(self):
-        """ Confirm that schema strictness is set to strict. """
-
-        assert(True)
-
-
-    def test_validate_loose_passes(self):
-        """ Test that doc passes schema validation with loose strictness. """
-
-        assert(True)
-
-
-    def test_validate_loose_fails(self):
-        """ Test that doc fails schema validation with loose strictness. """
-
-        assert(True)
-
-
-    def test_validate_strict_passes(self):
-        """ Test that doc passes schema validation with strict strictness. """
-
-        assert(True)
-
-
-    def test_validate_strict_fails(self):
-        """ Test that doc fails schema validation with strict strictness. """
-
-        assert(True)
-
-
-    def test_ingestion(self):
-        """ Test that doc is ingested successfully. """
-
-        assert(True)
-
-
-    def test_duplicate_error(self):
-        """ Test that duplicate doc error is caught. """
-
-        assert(True)
-
+        config_filename = os.path.join(configs_dir, "good_config_good_secrets.cfg")
+        mmi = MetadataMongoIngester()
+        mmi.open_connection(config_filename)
+        doc_filename = os.path.join(test_docs_dir, "bad_gt_metadata_missing_PI.json")
+        val = mmi.ingest_document(doc_filename)
+        assert val == None
 
 
 
