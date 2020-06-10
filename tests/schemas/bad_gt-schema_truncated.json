@@ -1,0 +1,20 @@
+{
+  "id": "http://ctgenometech01/QIFA/gt-delivery-schema-v1#",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "schema for GT delivery metadata for archival",
+  "definitions": {
+    "project": {
+      "type": "object",
+      "required": [
+        "Version", 
+        "Delivery_Path", 
+        "PI", 
+        "Group", 
+        "GT_Project_Name_ID", 
+        "Customer_Project_Name_ID", 
+        "Application_Type", 
+        "Date_Project_Opened", 
+        "Date_Sample_Received", 
+        "Date_Data_Delivered", 
+        "software",
+        "IsControlledData",

@@ -1,0 +1,107 @@
+{
+  "project": {
+    "Version": "1",
+    "Delivery_Path": "/gt_delivery/jax/RoelVerhaak_Lab_CT/20200221_19-verhaak-020",
+    "PI": "Roel Verhaak",
+    "Group": "verhaak-lab",
+    "GT_Project_Name_ID": "19-verhaak-020",
+    "Customer_Project_Name_ID": "SW cell 4C protocol",
+    "Application_Type": "Other",
+    "Date_Project_Opened": "2019-11-10T05:00:00.000Z",
+    "Date_Sample_Received": "0000-01-01T05:00:00.000Z",
+    "Date_Data_Delivered": "2020-02-21T05:00:00.000Z",
+    "software": [
+      "BCL2Fastq_2.18.0.12"
+    ],
+    "IsControlledData": "No",
+    "Notes": "DNF",
+    "samples": [
+      {
+        "Customer_Sample_Name": "A2780-0.5M",
+        "GT_Sample_Name": "GT20-05417",
+        "Species": "Homo sapiens",
+        "Sex": "DNF",
+        "Sample_Type": "cell pellet",
+        "State_Of_Sample": "DNF",
+        "Cell_Type": "DNF",
+        "Cell_Count": "DNF",
+        "Material_Type": "DNF",
+        "Strain": "DNF",
+        "Tissue_Or_Organ": "DNF",
+        "Concentration": "DNF",
+        "Protocol": "DNF",
+        "Fragment_Size": "NA",
+        "Spike_In": "DNF",
+        "Total_Reads": 5148038,
+        "Raw_File_Type": "fastq",
+        "Fastq_Filenames": [
+          "A2780-0_5M_GT20-05417_CAATTAAC-CGAGATAT_S1_R1_001.fastq.gz",
+          "A2780-0_5M_GT20-05417_CAATTAAC-CGAGATAT_S1_R2_001.fastq.gz"
+        ],
+        "Flowcell_Lanes": [
+          {
+            "Flow_Cell_ID": "000000000-G5B3N",
+            "Lane_ID": 1
+          }
+        ]
+      }
+    ],
+    "runs": [
+      {
+        "Run_ID": "200218_M02838_0252_000000000-G5B3N",
+        "Run_Type": "2x151_I8_8",
+        "Run_Start_Date": "2020-02-18T20:00:14.000Z",
+        "Run_Complete_Date": "2020-02-19T14:08:43.000Z",
+        "Instrument_ID": "CT_Illumina_MiSeq_M02838",
+        "Flow_Cell_ID": "000000000-G5B3N",
+        "lanes": [
+          {
+            "Lane_ID": 1,
+            "Read_ID": 1,
+            "Total_Yield_G": 0.82,
+            "PCT_Phix_Aligned": "0.34 +/- 0.01",
+            "PCT_Error_Rate": "0.43 +/- 0.07",
+            "PCT_Q30": 91.82,
+            "Density_K_by_mm2": "1163 +/- 15",
+            "PCT_Cluster_PF": "87.2 +/- 2.16",
+            "Reads_M": 6.27
+          },
+          {
+            "Lane_ID": 1,
+            "Read_ID": 2,
+            "Total_Yield_G": 0.04,
+            "PCT_Phix_Aligned": "0 +/- 0",
+            "PCT_Error_Rate": "0 +/- 0",
+            "PCT_Q30": 95.35,
+            "Density_K_by_mm2": "1163 +/- 15",
+            "PCT_Cluster_PF": "87.2 +/- 2.16",
+            "Reads_M": 6.27
+          },
+          {
+            "Lane_ID": 1,
+            "Read_ID": 3,
+            "Total_Yield_G": 0.04,
+            "PCT_Phix_Aligned": "0 +/- 0",
+            "PCT_Error_Rate": "0 +/- 0",
+            "PCT_Q30": 89.73,
+            "Density_K_by_mm2": "1163 +/- 15",
+            "PCT_Cluster_PF": "87.2 +/- 2.16",
+            "Reads_M": 6.27
+          },
+          {
+            "Lane_ID": 1,
+            "Read_ID": 4,
+            "Total_Yield_G": 0.82,
+            "PCT_Phix_Aligned": "0.31 +/- 0.01",
+            "PCT_Error_Rate": "0.77 +/- 0.11",
+            "PCT_Q30": 85.28,
+            "Density_K_by_mm2": "1163 +/- 15",
+            "PCT_Cluster_PF": "87.2 +/- 2.16",
+            "Reads_M": 6.27
+          }
+        ]
+      }
+    ]
+  }
+}
+

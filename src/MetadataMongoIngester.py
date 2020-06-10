@@ -110,7 +110,20 @@ class MetadataMongoIngester:
 
         return f"Error: Cannot ingest metadata {id}, reason unknown."
 
- 
+
+    def is_schema_set(self): 
+
+        """
+        State whether schema is set.
+
+        Parameters: None
+
+        Returns: bool. True if schema is set, False if not.
+        """
+
+        return self.curr_schema is not None
+
+
     def open_connection(self, config_filename):
 
         """
@@ -194,10 +207,10 @@ class MetadataMongoIngester:
         # Attempt to load the schema file as JSON and validate it.
         try:
             with open(schema_filename, 'r') as f:
-                self.curr_schema = json.loads(f)
+                self.curr_schema = json.load(f)
             # Test that the schema itself is valid by using one of the validators in the
             # jsonschema package. 
-            jsonschema.Draft3Validator.check_schema(self.curr_schema)
+            jsonschema.Draft7Validator.check_schema(self.curr_schema)
 
         except Exception as e:
             return f"Error: could not set schema {schema_filename}, received exception {str(e)}." 
