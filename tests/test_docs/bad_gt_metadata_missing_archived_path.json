@@ -1,8 +1,8 @@
 {
-  "archived_path": "/archive/GT/2020/RoelVerhaak_Lab_CT/20200221_19-verhaak-020",
   "project": {
     "Version": "1",
     "Delivery_Path": "/gt_delivery/jax/RoelVerhaak_Lab_CT/20200221_19-verhaak-020",
+    "PI": "Roel Verhaak",
     "Group": "verhaak-lab",
     "GT_Project_Name_ID": "19-verhaak-020",
     "Customer_Project_Name_ID": "SW cell 4C protocol",

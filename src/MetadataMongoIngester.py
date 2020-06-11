@@ -305,6 +305,9 @@ class MetadataMongoIngester:
                 doc[self.good_path_key] = doc[curr_key]
                 del doc[curr_key]
 
+        if self.good_path_key not in doc:
+            return "Error: no archived_path key in document."
+
         return doc
      
         
