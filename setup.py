@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="metadata_mongo)ingester",
+    name="metadata_mongo_ingester",
     version="1.1",
     author="Neil Kindlon",
     author_email="Neil.Kindlon@jax.org",
