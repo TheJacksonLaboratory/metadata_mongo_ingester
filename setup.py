@@ -17,7 +17,7 @@ setuptools.setup(
         "jsonschema",
         "pymongo",
         "pytest",
-    ]
+    ],
     url="https://github.com/TheJacksonLaboratory/metadata_mongo_ingester", 
     packages=setuptools.find_packages(),
     python_requires='>=3.6',
