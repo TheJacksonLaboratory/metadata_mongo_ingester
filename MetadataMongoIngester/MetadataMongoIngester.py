@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
 """
+
    Provide APIs for connecting to a mongoDB collection, validating docs against a schema,
-   and ingesting them
+   and ingesting them.
+
 """
 
 import configparser
@@ -15,11 +17,13 @@ import re
 class MetadataMongoIngester:
 
     """
-    Provide utilities for ingesting metadata into mongoDB
+
+    Provide utilities for ingesting metadata into mongoDB.
     
     Has methods to connect to a DB, set a schema, validate docs against that schema, and 
     ingest them. Also corrects the archivedPath key if given a wrong one. See help for 
     the __correct_archived_path_key method below.
+
     """
 
     def __init__(self):
@@ -54,11 +58,13 @@ class MetadataMongoIngester:
     def get_collection(self):
 
         """ 
+
         Get the current collection from the database.
 
         Parameters: None
 
         Returns: The mongodb collection named when the connection was opened.
+
         """
 
         return self.collection
@@ -67,11 +73,13 @@ class MetadataMongoIngester:
     def get_connection(self):
 
         """
+
         Get the current connection from the database.
 
         Parameters: None
 
         Returns: The mongodb connection that was opened.
+
         """
 
         return self.db_connection
@@ -80,6 +88,7 @@ class MetadataMongoIngester:
     def ingest_document(self, doc):
 
         """
+
         Ingest a document. Validate before ingestion if schema is set.
 
         Parameters:
@@ -89,6 +98,7 @@ class MetadataMongoIngester:
 
         Returns:
             None if successful, or error message string beginning with "Error:".
+
         """
 
         # If given a file, try to open and load it as json.
@@ -129,11 +139,13 @@ class MetadataMongoIngester:
     def is_schema_set(self): 
 
         """
+
         State whether schema is set.
 
         Parameters: None
 
         Returns: bool. True if schema is set, False if not.
+
         """
 
         return self.curr_schema is not None
@@ -142,6 +154,7 @@ class MetadataMongoIngester:
     def open_connection(self, config_filename):
 
         """
+
         Take a user provided configuration and connect to a mongo DB collection.
 
         Parameters:
@@ -152,6 +165,7 @@ class MetadataMongoIngester:
 
         Returns:
             None if successful, or error message string beginning with "Error:".
+
         """
 
         # Open config file
@@ -202,6 +216,7 @@ class MetadataMongoIngester:
     def set_schema(self, schema_filename=None):
 
         """
+
         Set or unset the schema file, insure its validity.
 
         Parameters:
@@ -211,6 +226,7 @@ class MetadataMongoIngester:
 
         Returns:
             None if successful, or error message string beginning with "Error:".
+
         """
 
 
@@ -236,6 +252,7 @@ class MetadataMongoIngester:
     def validate(self, doc):
 
         """
+
         Validate a metadata document against the current schema. 
 
         Parameters:
@@ -245,6 +262,7 @@ class MetadataMongoIngester:
 
         Returns:
             None if successful, or error message string beginning with "Error:".
+
         """
 
         # If no schema is currently set, there's nothing to do.
