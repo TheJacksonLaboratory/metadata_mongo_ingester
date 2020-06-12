@@ -13,6 +13,11 @@ setuptools.setup(
     description="Ingest metadata into mongodb",
     long_description=long_description,
     long_description_content_type="text/markdown",
+    install_requires=[
+        "jsonschema",
+        "pymongo",
+        "pytest",
+    ]
     url="https://github.com/TheJacksonLaboratory/metadata_mongo_ingester", 
     packages=setuptools.find_packages(),
     python_requires='>=3.6',
