@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 
 """
-
-   Provide APIs for connecting to a mongoDB collection, validating docs against a schema,
-   and ingesting them.
+    Provide APIs to validate metadata documents against a schema and ingest them into a MongoDB collection.   
 
 """
 

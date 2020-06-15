@@ -1,11 +1,7 @@
 Help on module MetadataMongoIngester:
 
 NAME
-    MetadataMongoIngester
-
-DESCRIPTION
-    Provide APIs for connecting to a mongoDB collection, validating docs against a schema,
-    and ingesting them.
+    MetadataMongoIngester - Provide APIs to validate metadata documents against a schema and ingest them into a MongoDB collection.
 
 CLASSES
     builtins.object
