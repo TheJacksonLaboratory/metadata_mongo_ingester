@@ -15,7 +15,7 @@ Set, validate, or unset a schema with the ingester's `set_schema` method.
 
 Validate a document against a schema with the `validate` method.
 
-Ingest a document with the `ingest_document` method.
+Ingest a document with the `ingest_document` method. Please see the note in this method's help regarding the required `archived_path` field.
 
 
 ### Unit Tests
