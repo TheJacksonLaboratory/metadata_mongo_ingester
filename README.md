@@ -4,13 +4,17 @@
    
 
 ## Overview
-   The microscopy data manager runs a scan each morning of the microscopy delivery folders, located on jax window shares (see [Configuration and target directories](https://github.com/TheJacksonLaboratory/microscopy_data_mgmt/blob/master/README.md#configuration-and-target-directories), below). It sends an e-mail noting which folders have data, metadata, have been archived, are older or newer than 90 days, and which can or must be deleted. It also notes any serious problems encountered, such as folder contents being altered after archiving has occurred. In future versions, it will archive and delete the data as needed.
-
+   
+   
 ## Documentation
 The subjects below are documented in more detail in the [docs](https://github.com/TheJacksonLaboratory/metadata_mongo_ingester/tree/master/docs) folder.
 
-### Run Environment
-The [Run Environment](https://github.com/TheJacksonLaboratory/microscopy_data_mgmt/blob/master/docs/Run%20environment.md) page describes the server and service account to use, the daily cron job, job scripts, and log files.
+### Usage
+Open a connection by providing a [configuration file](https://github.com/TheJacksonLaboratory/metadata_mongo_ingester/blob/master/docs/Configuration_files.md) to the ingester's open_connection method.
+Set and validate a schema with the ingester's set_schema method. 
+Validate a document with the validate method,
+Additonal methods and details can be found on the [methods]( page
+
 
 ### Class Structure and Control Flow
 The [Class Structure and Control Flow](https://github.com/TheJacksonLaboratory/microscopy_data_mgmt/blob/master/docs/Class%20structure%20and%20control%20flow.md) page explains what the different classes do and how they work together.
