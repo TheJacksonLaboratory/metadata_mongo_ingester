@@ -6,7 +6,7 @@ The user must provide a configuration file containing the details of the mongoDB
 [mongodb]
 address = server_name
 authSource = user_credentials_db_name
-collection = metadata_ingester_tests_config
+collection = collection_name
 database = db_name
 index_keys = archived_path
 port = port_num
