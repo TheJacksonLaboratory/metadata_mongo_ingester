@@ -1,4 +1,4 @@
-# metadata_mongo_ingester
+# MetadataMongoIngester
     Provide APIs to validate metadata documents against a schema and ingest them into a MongoDB collection.
 
    
