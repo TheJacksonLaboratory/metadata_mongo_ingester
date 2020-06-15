@@ -12,7 +12,7 @@ CLASSES
         MetadataMongoIngester
     
     class MetadataMongoIngester(builtins.object)
-     |  Provide utilities for ingesting metadata into mongoDB.
+     |  Provide APIs to validate metadata documents against a schema and ingest them into a MongoDB collection.
      |  
      |  Has methods to connect to a DB, set a schema, validate docs against that schema, and 
      |  ingest them. Also corrects the archivedPath key if given a wrong one. See help for 
