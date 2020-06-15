@@ -41,6 +41,11 @@ CLASSES
      |  ingest_document(self, doc)
      |      Ingest a document. Validate before ingestion if schema is set.
      |      
+     |      Note: Documents containing a key with an alternate form of "archived_path",
+     |          such as "archivedPath" or "archivedFolderPath", will be automatically
+     |          corrcted, but documents with no discernable archived_path key will be
+     |          rejected with an error.
+     |      
      |      Parameters:
      |          doc (str or dict):
      |              If dict, metadata document to be ingested.
