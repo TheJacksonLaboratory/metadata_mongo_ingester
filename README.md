@@ -9,13 +9,13 @@
 ### Usage
 All methods are detailed on the [methods](https://github.com/TheJacksonLaboratory/metadata_mongo_ingester/blob/master/docs/methods.md) page.
 
-Open a connection by providing a [configuration file](https://github.com/TheJacksonLaboratory/metadata_mongo_ingester/blob/master/docs/Configuration_files.md) to the ingester's open_connection method.
+Open a connection by providing a [configuration file](https://github.com/TheJacksonLaboratory/metadata_mongo_ingester/blob/master/docs/Configuration_files.md) to the ingester's `open_connection` method.
 
-Set, validate, or unset a schema with the ingester's set_schema method. 
+Set, validate, or unset a schema with the ingester's `set_schema` method. 
 
-Validate a document against a schema with the validate method.
+Validate a document against a schema with the `validate` method.
 
-Ingest a document with the ingest_document method.
+Ingest a document with the `ingest_document` method.
 
 
 ### Unit Tests
