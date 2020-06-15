@@ -89,6 +89,11 @@ class MetadataMongoIngester:
 
         Ingest a document. Validate before ingestion if schema is set.
 
+        Note: Documents containing a key with an alternate form of "archived_path",
+            such as "archivedPath" or "archivedFolderPath", will be automatically
+            corrcted, but documents with no discernable archived_path key will be
+            rejected with an error.
+
         Parameters:
             doc (str or dict):
                 If dict, metadata document to be ingested.
@@ -301,12 +306,13 @@ class MetadataMongoIngester:
         instead written as 'archiveFolderPath' or 'archivedFolderPath' (note the letter 'd').
         In faculty (derived) data, it might also have a hyphen, incorrect case, or other error. 
         This method will insert the correct key and delete the old one. If the document has
-        no field for the archived path, no change is made.
+        no field for the archived path, an error is returned.
 
         Parameters:
             doc (dict): Metadata document as dict.
 
-        Returns: Updated metadata document as dict.
+        Returns: Updated metadata document as dict, or string beginning with "Error" if no
+            archived_path is found.
         """
 
         # If the metadata has one of the older or incorrect archivedPath keys, change it to the 
