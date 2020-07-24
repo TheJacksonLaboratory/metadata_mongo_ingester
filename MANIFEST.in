@@ -1,0 +1,2 @@
+include metadata_mongo_ingester/ingester_config.cfg
+

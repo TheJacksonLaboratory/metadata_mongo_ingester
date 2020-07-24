@@ -154,7 +154,7 @@ class MetadataMongoIngester:
         return self.curr_schema is not None
 
 
-    def open_connection(self, config_filename):
+    def open_connection(self, config_filename=None):
 
         """
 
@@ -164,12 +164,18 @@ class MetadataMongoIngester:
             config_filename (str): Absolute path to a config file. File must include:
                 1) A mongodb section, in brackets. I.e., [mongodb].
                 2) A secrets section.
-                
+                Default config will be used if none is provided
 
         Returns:
             None if successful, or error message string beginning with "Error:".
 
         """
+
+        # If no config given, use default
+        if not config_filename:
+            # Use the default config file that should be located in this directory
+            src_dir = os.path.dirname(os.path.realpath(__file__))
+            config_filename = os.path.join(src_dir, "ingester_config.cfg") 
 
         # Open config file
         try:
@@ -191,7 +197,8 @@ class MetadataMongoIngester:
 
         # Get the password from the secrets file or return an error. Must pass the user_config and the
         # directory where the config file is located.
-        password = self.__read_secrets_file(user_config, os.path.dirname(config_filename))
+        password = self.__read_secrets_file()
+        # password = self.__read_secrets_file(user_config, os.path.dirname(config_filename))
         if password.startswith("Error"):
             return password
 
@@ -333,6 +340,7 @@ class MetadataMongoIngester:
         return doc
      
         
+    """
     def __read_secrets_file(self, user_config, config_dir):
 
         """
@@ -373,7 +381,43 @@ class MetadataMongoIngester:
 
         password = mongo_section["password"]
         return password
-          
+    """
+
+    def __read_secrets_file(self):
+
+        """
+        Get secrets file from the user home directory, read it, and return the password
+
+        Parameters:
+            None
+
+        Returns: The password, or an error string beginning with "Error:"
+        """
+
+        home_dir = os.path.expanduser("~")
+        secrets_filename = os.path.join(home_dir, "mmi_secrets.cfg")
+
+
+        if not os.path.exists(secrets_filename):
+            return f"Error: secrets file {secrets_filename} does not exist."
+
+        try:
+            secrets_config = configparser.ConfigParser()
+            secrets_config.read(secrets_filename)
+        except Exception as e:
+            return f"Error: cannot read secrets file {secrets_filename}, received exception {str(e)}."
+
+        try:
+            mongo_section = secrets_config["mongodb_dev"]
+        except Exception as e:
+            return f"Error: no mongodb section in secrets file {secrets_filename}."
+
+        if "password" not in mongo_section:
+            return f"Error: no password in secrets file {secrets_filename}."
+
+        password = mongo_section["password"]
+        return password
+      
         
         
 

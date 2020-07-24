@@ -13,6 +13,7 @@ setuptools.setup(
     description="Ingest metadata into mongodb",
     long_description=long_description,
     long_description_content_type="text/markdown",
+    include_package_data=True,
     install_requires=[
         "jsonschema",
         "pymongo",
