@@ -340,49 +340,6 @@ class MetadataMongoIngester:
         return doc
      
         
-    """
-    def __read_secrets_file(self, user_config, config_dir):
-
-        # """
-        Get secrets file from the config, read it, and return the password.
-
-        Parameters:
-            user_config (dict): Result of the parsed config file.
-            config_dir (str): Absolute path to the directory containing the config file. The secrets
-            file is expected to be in this directory also.
-
-        Returns: The password, or an error string beginning with "Error:"
-        # """
-
-        # Get the secrets filename from the config
-        if "secrets" not in user_config:
-            return "Error: no secrets section in the config file."
-
-        if "filename" not in user_config["secrets"]:
-            return "Error: no filename key in secrets section of the config file."
-
-        secrets_filename = os.path.join(config_dir, user_config["secrets"]["filename"])
-        if not os.path.exists(secrets_filename):
-            return f"Error: secrets file {secrets_filename} does not exist."
-
-        try:            
-            secrets_config = configparser.ConfigParser()
-            secrets_config.read(secrets_filename)
-        except Exception as e:
-            return f"Error: cannot read secrets file {secrets_filename}, received exception {str(e)}."
-
-        try:
-            mongo_section = secrets_config["mongodb"]
-        except Exception as e:
-            return f"Error: no mongodb section in secrets file {secrets_filename}."
-
-        if "password" not in mongo_section:
-            return f"Error: no password in secrets file {secrets_filename}."
-
-        password = mongo_section["password"]
-        return password
-    """
-
     def __read_secrets_file(self):
 
         """
