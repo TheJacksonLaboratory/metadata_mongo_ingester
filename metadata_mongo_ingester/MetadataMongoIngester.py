@@ -343,7 +343,7 @@ class MetadataMongoIngester:
     """
     def __read_secrets_file(self, user_config, config_dir):
 
-        """
+        # """
         Get secrets file from the config, read it, and return the password.
 
         Parameters:
@@ -352,7 +352,7 @@ class MetadataMongoIngester:
             file is expected to be in this directory also.
 
         Returns: The password, or an error string beginning with "Error:"
-        """
+        # """
 
         # Get the secrets filename from the config
         if "secrets" not in user_config:
