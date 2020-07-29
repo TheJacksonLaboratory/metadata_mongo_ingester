@@ -9,6 +9,7 @@ import configparser
 import json
 import jsonschema
 import os
+from pathlib import Path
 import pymongo
 import re
 
@@ -154,7 +155,7 @@ class MetadataMongoIngester:
         return self.curr_schema is not None
 
 
-    def open_connection(self, config_filename=None):
+    def open_connection(self, config_filename=None, secrets_filename=None):
 
         """
 
@@ -171,10 +172,10 @@ class MetadataMongoIngester:
 
         """
 
-        # If no config given, use default
+        # If no config given, use default in user's home directory
         if not config_filename:
             # Use the default config file that should be located in this directory
-            src_dir = os.path.dirname(os.path.realpath(__file__))
+            src_dir = str(Path.home())
             config_filename = os.path.join(src_dir, "ingester_config.cfg") 
 
         # Open config file
@@ -186,7 +187,7 @@ class MetadataMongoIngester:
 
         # Confirm it has a "mongodb" section
         try:
-            mongo_section = user_config["mongodb"]
+            mongo_section = user_config["mongodb_dev"]
         except Exception as e:
             return f"Error: no mongodb section in config file {config_filename}."
 
@@ -195,10 +196,8 @@ class MetadataMongoIngester:
             return f"Error: no index_keys in mongodb section of config file {config_filename}."
         index_key = mongo_section["index_keys"]
 
-        # Get the password from the secrets file or return an error. Must pass the user_config and the
-        # directory where the config file is located.
+        # Get the password from the secrets file or return an error.
         password = self.__read_secrets_file()
-        # password = self.__read_secrets_file(user_config, os.path.dirname(config_filename))
         if password.startswith("Error"):
             return password
 
@@ -340,7 +339,7 @@ class MetadataMongoIngester:
         return doc
      
         
-    def __read_secrets_file(self):
+    def __read_secrets_file(self, secrets_filename=None):
 
         """
         Get secrets file from the user home directory, read it, and return the password
@@ -351,9 +350,10 @@ class MetadataMongoIngester:
         Returns: The password, or an error string beginning with "Error:"
         """
 
-        home_dir = os.path.expanduser("~")
-        secrets_filename = os.path.join(home_dir, "mmi_secrets.cfg")
-
+        # If no secrets file was given, use the default in the user's home directory
+        if not secrets_filename:
+            home_dir = str(Path.home())
+            secrets_filename = os.path.join(home_dir, "ingester_secrets.cfg")
 
         if not os.path.exists(secrets_filename):
             return f"Error: secrets file {secrets_filename} does not exist."
