@@ -155,49 +155,37 @@ class MetadataMongoIngester:
         return self.curr_schema is not None
 
 
-    def open_connection(self, config_filename=None, secrets_filename=None):
+    def open_connection(self, mode="dev", config_filename=None, secrets_filename=None):
 
         """
 
         Take a user provided configuration and connect to a mongo DB collection.
 
         Parameters:
-            config_filename (str): Absolute path to a config file. File must include:
-                1) A mongodb section, in brackets. I.e., [mongodb].
-                2) A secrets section.
-                Default config will be used if none is provided
+
+            mode (str) : Either "dev" or "prod" for development or production
+
+            config_filename (str): Absolute path to a config file. If None, it will look in the
+                user's home directory for a file named "ingester_config.cfg".
+
+            secrets_filename (str): Absolute path to a secrets file. If None, it will look in 
+                the user's home directory for a file named "ingester_secrets.cfg"
 
         Returns:
             None if successful, or error message string beginning with "Error:".
 
         """
 
-        # If no config given, use default in user's home directory
-        if not config_filename:
-            # Use the default config file that should be located in this directory
-            src_dir = str(Path.home())
-            config_filename = os.path.join(src_dir, "ingester_config.cfg") 
+        if mode not in ["dev", "prod"]:
+            return f"Error: mode must be \"dev\" or \"prod\", not \"{mode}\"."
 
-        # Open config file
-        try:
-            user_config = configparser.ConfigParser()
-            user_config.read(config_filename)
-        except Exception as e:
-            return f"Error: cannot read config file {config_filename}, received exception {str(e)}."
-
-        # Confirm it has a "mongodb" section
-        try:
-            mongo_section = user_config["mongodb_dev"]
-        except Exception as e:
-            return f"Error: no mongodb section in config file {config_filename}."
-
-        # Get the index_keys or return an error if not found.
-        if "index_keys" not in mongo_section:
-            return f"Error: no index_keys in mongodb section of config file {config_filename}."
-        index_key = mongo_section["index_keys"]
+        # Get the configuration from the config file or return an error.
+        mongo_section = self.__read_config_file(mode, config_filename)
+        if type(mongo_section) == str and mongo_section.startswith("Error"):
+            return mongo_section
 
         # Get the password from the secrets file or return an error.
-        password = self.__read_secrets_file()
+        password = self.__read_secrets_file(mode, secrets_filename)
         if password.startswith("Error"):
             return password
 
@@ -215,7 +203,7 @@ class MetadataMongoIngester:
 
         # Create an index if its not already present.
         try:
-            self.collection.create_index([(index_key, pymongo.ASCENDING)], unique=True)
+            self.collection.create_index([(mongo_section["index_keys"], pymongo.ASCENDING)], unique=True)
         except Exception as e:
             return f"Error: could not create index, received exception {str(e)}."
 
@@ -338,16 +326,62 @@ class MetadataMongoIngester:
 
         return doc
      
-        
-    def __read_secrets_file(self, secrets_filename=None):
+
+    def __read_config_file(self, mode, config_filename):
 
         """
-        Get secrets file from the user home directory, read it, and return the password
+
+        Read either a given config file or look for one in the user's home directory.
 
         Parameters:
-            None
+            config_filename (str) : Absolute path to config file. If None, will look in home dir.
 
-        Returns: The password, or an error string beginning with "Error:"
+        Returns:
+            mongo_config (dict) : dict with config values
+            Or
+            mongo_config (str) : An error message beginning with "Error"
+
+        """
+
+        # If no config given, use default in user's home directory
+        if not config_filename:
+            # Use the default config file that should be located in this directory
+            src_dir = str(Path.home())
+            config_filename = os.path.join(src_dir, "ingester_config.cfg")
+
+        # Open config file
+        try:
+            user_config = configparser.ConfigParser()
+            user_config.read(config_filename)
+        except Exception as e:
+            return f"Error: cannot read config file {config_filename}, received exception {str(e)}."
+
+        # Confirm it has a dev or prod "mongodb" section
+        mode = "mongodb" + '_' + mode
+        try:
+            mongo_config = user_config[mode]
+        except Exception as e:
+            return f"Error: no {mode} section in config file {config_filename}."
+
+        # Get the index_keys or return an error if not found.
+        if "index_keys" not in mongo_config:
+            return f"Error: no index_keys in {mode} section of config file {config_filename}."
+
+        return mongo_config
+
+        
+    def __read_secrets_file(self, mode, secrets_filename):
+
+        """
+
+        Read either a given secrets file or look for one in the user's home directory.
+
+        Parameters:
+            secrets_filename (str) : Absolute path to config file. If None, will look in home dir.
+
+        Returns:
+            password (str) : The password if successful, or an error message beginning with "Error".
+
         """
 
         # If no secrets file was given, use the default in the user's home directory
@@ -364,10 +398,12 @@ class MetadataMongoIngester:
         except Exception as e:
             return f"Error: cannot read secrets file {secrets_filename}, received exception {str(e)}."
 
+        # Build the tag of the desired section
+        mode = "mongodb" + '_' + mode
         try:
-            mongo_section = secrets_config["mongodb_dev"]
+            mongo_section = secrets_config[mode]
         except Exception as e:
-            return f"Error: no mongodb section in secrets file {secrets_filename}."
+            return f"Error: no {mode} section in secrets file {secrets_filename}."
 
         if "password" not in mongo_section:
             return f"Error: no password in secrets file {secrets_filename}."

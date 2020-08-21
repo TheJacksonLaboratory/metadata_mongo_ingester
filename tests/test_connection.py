@@ -30,7 +30,7 @@ class TestConnection:
         """ Given a poorly formatted config file, confirm failure. """
 
         config_filename = os.path.join(configs_dir, "bad_config_format.cfg")
-        val= MetadataMongoIngester().open_connection(config_filename)
+        val= MetadataMongoIngester().open_connection(config_filename=config_filename)
         assert val.startswith("Error: cannot read config file")
 
 
@@ -39,7 +39,7 @@ class TestConnection:
         """ Given a config file missing a mongodb section, confirm failure. """
 
         config_filename = os.path.join(configs_dir, "bad_config_no_mongodb_section.cfg")
-        val= MetadataMongoIngester().open_connection(config_filename)
+        val= MetadataMongoIngester().open_connection(config_filename=config_filename)
         assert val.startswith("Error: no mongodb section in config")
 
 
@@ -48,7 +48,7 @@ class TestConnection:
         """ Given a config file with a mongodb section missing index keys, confirm failure. """
 
         config_filename = os.path.join(configs_dir, "bad_config_no_index_keys.cfg")
-        val= MetadataMongoIngester().open_connection(config_filename)
+        val= MetadataMongoIngester().open_connection(config_filename=config_filename)
         assert val.startswith("Error: no index_keys in mongodb section")
 
 
@@ -57,7 +57,7 @@ class TestConnection:
         """ Given a config file missing a secrets section, confirm failure. """
 
         config_filename = os.path.join(configs_dir, "bad_config_no_secrets_section.cfg")
-        val= MetadataMongoIngester().open_connection(config_filename)
+        val= MetadataMongoIngester().open_connection(config_filename=config_filename)
         assert val.startswith("Error: no secrets section")
 
 
@@ -66,7 +66,7 @@ class TestConnection:
         """ Given a config file missing a secrets section, confirm failure. """
 
         config_filename = os.path.join(configs_dir, "bad_config_no_secrets_filename.cfg")
-        val= MetadataMongoIngester().open_connection(config_filename)
+        val= MetadataMongoIngester().open_connection(config_filename=config_filename)
         assert val.startswith("Error: no filename key in secrets section")
 
 
@@ -75,7 +75,7 @@ class TestConnection:
         """ Given a secrets file with no mongodb section, confirm failure. """
 
         config_filename = os.path.join(configs_dir, "good_config_bad_secrets_no_mongodb_section.cfg")
-        val= MetadataMongoIngester().open_connection(config_filename)
+        val= MetadataMongoIngester().open_connection(config_filename=config_filename)
         assert val.startswith("Error: no mongodb section in secrets file")
 
 
@@ -84,7 +84,7 @@ class TestConnection:
         """ Given a secrets file with no password, confirm failure. """
 
         config_filename = os.path.join(configs_dir, "good_config_bad_secrets_no_password.cfg")
-        val= MetadataMongoIngester().open_connection(config_filename)
+        val= MetadataMongoIngester().open_connection(config_filename=config_filename)
         assert val.startswith("Error: no password in secrets file")
 
 
@@ -93,7 +93,7 @@ class TestConnection:
         """ Given a good config file and a good secrets file, confirm success. """
 
         config_filename = os.path.join(configs_dir, "good_config_good_secrets.cfg")
-        val= MetadataMongoIngester().open_connection(config_filename)
+        val= MetadataMongoIngester().open_connection(config_filename=config_filename)
         assert val == None
 
 
