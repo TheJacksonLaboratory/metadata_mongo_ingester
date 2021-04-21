@@ -21,4 +21,4 @@ The [Unit tests](https://github.com/TheJacksonLaboratory/metadata_mongo_ingester
 
 
 ### Questions?
-Please contact [Neil Kindlon](mailto:Neil.Kindlon@jax.org) or [Mitch Kosta](mailto:Mitch.Kosta@jax.org) in the [Research IT](https://jacksonlaboratory.sharepoint.com/sites/ResearchIT) department for assistance.
+Please contact [Neil Kindlon](mailto:Neil.Kindlon@jax.org) or [Mitch Kostich](mailto:Mitch.Kostich@jax.org) in the [Research IT](https://jacksonlaboratory.sharepoint.com/sites/ResearchIT) department for assistance.
