@@ -120,10 +120,15 @@ class MetadataMongoIngester:
         if type(doc) is str and doc.startswith("Error"):
             return doc
 
+
         # Validation returns None on success, error message otherwise.
-        val = self.validate(doc)
-        if val:
-            return val
+        try:
+            val = self.validate(doc)
+            if val:
+                return f"Could not valiate doc, error was {val}"
+        except Exception as e:
+            return f"Could not valiate doc, received exception {str(e)}"
+
 
         # Attempt ingestion
         try:
