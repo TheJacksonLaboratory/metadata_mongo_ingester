@@ -168,7 +168,7 @@ class MetadataMongoIngester:
 
         Parameters:
 
-            mode (str) : Either "dev" or "prod" for development or production
+            mode (str) : Either "dev", "test", or "prod" for development, test, or production
 
             config_filename (str): Absolute path to a config file. If None, it will look in the
                 user's home directory for a file named "ingester_config.cfg".
@@ -181,8 +181,8 @@ class MetadataMongoIngester:
 
         """
 
-        if mode not in ["dev", "prod"]:
-            return f"Error: mode must be \"dev\" or \"prod\", not \"{mode}\"."
+        if mode not in ["dev", "test", "prod"]:
+            return f"Error: mode must be \"dev\", \"test\", or \"prod\", not \"{mode}\"."
 
         # Get the configuration from the config file or return an error.
         mongo_section = self.__read_config_file(mode, config_filename)
@@ -361,7 +361,7 @@ class MetadataMongoIngester:
         except Exception as e:
             return f"Error: cannot read config file {config_filename}, received exception {str(e)}."
 
-        # Confirm it has a dev or prod "mongodb" section
+        # Confirm it has the rquested dev, test, or prod "mongodb" section
         mode = "mongodb" + '_' + mode
         try:
             mongo_config = user_config[mode]
