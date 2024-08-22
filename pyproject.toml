@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "metadata_mongo_ingester"
+version = "1.1"
+authors = [
+  { name="Neil Kindlon"},
+]
+description = "Provide APIs to validate metadata documents against a schema and ingest them into a MongoDB collection."
+readme = "README.md"
+requires-python = ">=3.6"
+classifiers = [
+    "Programming Language :: Python :: 3",
+     "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "attrs==19.3.0",
+    "importlib-metadata==1.7.0",
+    "jsonschema==3.2.0",
+    "more-itertools==8.3.0",
+    "packaging==20.4",
+    "pluggy==0.13.1",
+    "py==1.9.0",
+    "pymongo==3.10.1",
+    "pyparsing==2.4.7",
+    "pyrsistent==0.16.0",
+    "pytest==5.4.3",
+    "six==1.15.0",
+    "wcwidth==0.1.9",
+    "zipp==3.1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/TheJacksonLaboratory/metadata_mongo_ingester"
